@@ -3,6 +3,10 @@
 
 @startuml my simple order request
 
+header Let Us Design
+footer Page %page% of %lastpage%
+title Order flow
+
 actor "Web User" as WebUser
 participant "Front End" as Portal
 participant Gateway
