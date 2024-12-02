@@ -11,6 +11,7 @@ participant "Rest Api" as RestApi
 database OrdersDatabase
 entity "External\nShipping Service" as ExternalShippingService
 
+autonumber
 WebUser -> Portal ++ : Orders Request
 group Step: Authentication
     Portal -> Gateway ++: GET /api/v1/orders\nBearer Token
@@ -18,6 +19,7 @@ group Step: Authentication
     IdentityServer --> IdentityServer : Validate\nToken
     IdentityServer -[#green]> Gateway : Success, Token Validated
 else Authentication Failed
+    autonumber 5
     IdentityServer -[#red]> Gateway --: Request Failed
     Gateway -[#red]> Portal : Authentication Failure
     Portal -[#red]> WebUser: Login Again.  
@@ -25,6 +27,7 @@ else Authentication Failed
 end
 
 group Call Order API
+    autonumber 8.1
     Gateway -> RestApi ++ : GET api/v1/orders
     RestApi --[#blue]> RestApi : Do Some\nProcessing
     group Database Interaction
@@ -33,10 +36,11 @@ group Call Order API
     end
     'loop
     loop Find Shipping status
+        autonumber inc
         RestApi -> ExternalShippingService ++ : Find Shipping status
         ExternalShippingService -> RestApi -- : Return Shipping status
     end
-
+    autonumber 10
     RestApi -> Portal --: Orders
 end
 
