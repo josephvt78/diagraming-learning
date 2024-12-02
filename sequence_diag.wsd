@@ -1,0 +1,11 @@
+@startuml my simple order request
+
+actor "Web User" as WebUser
+participant "Front End" as Portal
+
+WebUser -> Portal ++ : Orders Request
+'activate Portal
+'deactivate Portal
+Portal -> WebUser --: Response
+
+@enduml
