@@ -4,6 +4,9 @@ actor "Web User" as WebUser
 participant "Front End" as Portal
 participant Gateway
 participant "Identity\nServer" as IdentityServer #yellow
+participant "Rest Api" as RestApi
+database OrdersDatabase
+entity "External\nShipping Service" as ExternalShippingService
 
 WebUser -> Portal ++ : Orders Request
 group Step: Authentication
@@ -17,6 +20,23 @@ else Authentication Failed
     Portal -[#red]> WebUser: Login Again.  
     note right : Authentication has failed  
 end
+
+group Call Order API
+    Gateway -> RestApi ++ : GET api/v1/orders
+    RestApi --[#blue]> RestApi : Do Some\nProcessing
+    group Database Interaction
+        RestApi -> OrdersDatabase ++ : Query Orders
+        OrdersDatabase -> RestApi -- : Orders
+    end
+    'loop
+    loop Find Shipping status
+        RestApi -> ExternalShippingService ++ : Find Shipping status
+        ExternalShippingService -> RestApi -- : Return Shipping status
+    end
+
+    RestApi -> Portal --: Orders
+end
+
 Portal -> WebUser --: Response
 
 @enduml
