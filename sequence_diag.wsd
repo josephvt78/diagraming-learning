@@ -1,3 +1,6 @@
+'Rich PlantUML support for Visual Studio Code. Plugin used with VS Code
+'Refer Syntax: https://plantuml.com/sequence-diagram
+
 @startuml my simple order request
 
 actor "Web User" as WebUser
