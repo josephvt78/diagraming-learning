@@ -3,7 +3,7 @@
 actor "Web User" as WebUser
 participant "Front End" as Portal
 participant Gateway
-participant "Identity\nServer" as IdentityServer
+participant "Identity\nServer" as IdentityServer #yellow
 
 WebUser -> Portal ++ : Orders Request
 group Step: Authentication
