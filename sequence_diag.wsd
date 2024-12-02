@@ -2,10 +2,21 @@
 
 actor "Web User" as WebUser
 participant "Front End" as Portal
+participant Gateway
+participant "Identity\nServer" as IdentityServer
 
 WebUser -> Portal ++ : Orders Request
-'activate Portal
-'deactivate Portal
+group Step: Authentication
+    Portal -> Gateway ++: GET /api/v1/orders\nBearer Token
+    Gateway -> IdentityServer ++: Authenticate Token
+    IdentityServer --> IdentityServer : Validate\nToken
+    IdentityServer -[#green]> Gateway : Success, Token Validated
+else Authentication Failed
+    IdentityServer -[#red]> Gateway --: Request Failed
+    Gateway -[#red]> Portal : Authentication Failure
+    Portal -[#red]> WebUser: Login Again.  
+    note right : Authentication has failed  
+end
 Portal -> WebUser --: Response
 
 @enduml
